@@ -1,13 +1,12 @@
 //Функция, возвращающая случайное целое число из переданного диапазона [a, b].
-function getRandomInt(a, b) {
-  if (a > b) {
-    let c;
-    c = a;
-    a = b;
-    b = c;
+function getRandomInt(min, max) {
+  if (min > max) {
+    const temp = min;
+    min = max;
+    max = temp;
   }
-  return Math.floor((Math.random() * (b - a + 1)) + a);
-};
+  return Math.floor((Math.random() * (max - min + 1)) + min);
+}
 
 getRandomInt();
 
@@ -18,6 +17,6 @@ function isLengthOk(string, maxLength) {
     return true;
   }
   return false;
-};
+}
 
 isLengthOk();
