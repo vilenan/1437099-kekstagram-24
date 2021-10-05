@@ -83,20 +83,25 @@ const setSize = 25;
 const createFotoCard = () => {
   const randomLikesIndex = getRandomPositiveInteger(15, 200);
   const randonDescriptionIndex = getRandomPositiveInteger(0, DESCRIPTIONS.length - 1);
-  const randomMessagesIndex = getRandomPositiveInteger(0, MESSAGES.length - 1);
-  const randomAuthorIndex = getRandomPositiveInteger(0, AUTHOR_NAMES.length - 1);
   const IdIndex = getRandomPositiveInteger(1, 25);
+
+  const createComment = () => {
+    const randomMessagesIndex = getRandomPositiveInteger(0, MESSAGES.length - 1);
+    const randomAuthorIndex = getRandomPositiveInteger(0, AUTHOR_NAMES.length - 1);
+    return {
+      id: getRandomPositiveInteger(1, 1000),
+      avatar: 'img/avatar-' + getRandomPositiveInteger(1, 6) + '.svg',
+      message: MESSAGES[randomMessagesIndex],
+      name: AUTHOR_NAMES[randomAuthorIndex],
+    };
+  };
+
   return {
     id: IdIndex, //1-25 не повторяются
     url: 'photos/' + IdIndex + '.jpg', //где {{i}} — это число от 1 до 25
     description: DESCRIPTIONS[randonDescriptionIndex],
     likes: randomLikesIndex, //Случайное число от 15 до 200.
-    comments: [{
-      id: getRandomPositiveInteger(1, 1000),
-      avatar: 'img/avatar-' + getRandomPositiveInteger(1, 6) + '.svg',
-      message: MESSAGES[randomMessagesIndex],
-      name: AUTHOR_NAMES[randomAuthorIndex],
-    }],
+    comments: Array.from({ length: 5 }, createComment)
   };
 };
 
