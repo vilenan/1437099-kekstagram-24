@@ -1,15 +1,21 @@
+// Функция для проверки максимальной длины строки.Будет использоваться для проверки длины введённого комментария, но должна быть универсальна.Пример использования функции:
+// Результат: true, если строка проходит по длине, и false — если не проходит
+// function isLengthOk(string, maxLength) {
+//   return string.length <= maxLength;
+// }
+// isLengthOk('Привет!', 5);
 //Функция, возвращающая случайное целое число из переданного диапазона [a, b].
-function getRandomInt(min, max) {
-  if (min > max) {
-    const temp = min;
-    min = max;
-    max = temp;
-  }
-  if (min < 0) {
-    return 'Диапазон может быть только положительным, включая 0';
-  }
-  return Math.floor((Math.random() * (max - min + 1)) + min);
-}
+// function getRandomInt(min, max) {
+//   if (min > max) {
+//     const temp = min;
+//     min = max;
+//     max = temp;
+//   }
+//   if (min < 0) {
+//     return 'Диапазон может быть только положительным, включая 0';
+//   }
+//   return Math.floor((Math.random() * (max - min + 1)) + min);
+// }
 //getRandomInt(7, 12);
 function getRandomPositiveInteger(a, b) {
   // Чтобы не заставлять пользователя нашей функции помнить порядок аргументов,
@@ -31,18 +37,20 @@ function getRandomPositiveInteger(a, b) {
   // После нужно сложить дельту с минимальным значением, чтобы получить итоговое случайное число.
   const result = Math.random() * (upper - lower + 1) + lower;
   // "Плюс единица", чтобы включить верхнюю границу диапазона в случайные числа
-
   // И в конце с помощью метода Math.floor мы округляем полученный результат,
   // потому что Math.random() генерирует только дробные числа и ноль.
   return Math.floor(result);
-};
-// Функция для проверки максимальной длины строки.Будет использоваться для проверки длины введённого комментария, но должна быть универсальна.Пример использования функции:
-// Результат: true, если строка проходит по длине, и false — если не проходит
-function isLengthOk(string, maxLength) {
-  return string.length <= maxLength;
 }
-//isLengthOk('Привет!', 5);
 
+/*функции для создания массива из 25 сгенерированных объектов.
+Каждый объект массива — описание фотографии, опубликованной пользователем.
+Напишем функцию генерирующую объект- описание фото
+*/
+
+const FOTOS_NUMBER = 25;
+const FOTOS_INDEXES = Array.from({ length: FOTOS_NUMBER });
+for (let j = 0; j < FOTOS_INDEXES.length; j++) { FOTOS_INDEXES[j] = j + 1; }
+const URL_INDEXES = FOTOS_INDEXES.slice();
 
 const MESSAGES = [
   'Всё отлично!',
@@ -50,7 +58,7 @@ const MESSAGES = [
   'Когда вы делаете фотографию, хорошо бы убирать палец из кадра.В конце концов это просто непрофессионально.',
   'Моя бабушка случайно чихнула с фотоаппаратом в руках и у неё получилась фотография лучше.',
   'Я поскользнулся на банановой кожуре и уронил фотоаппарат на кота и у меня получилась фотография лучше.',
-  'Лица у людей на фотке перекошены, как будто их избивают.Как можно было поймать такой неудачный момент ? !'
+  'Лица у людей на фотке перекошены, как будто их избивают.Как можно было поймать такой неудачный момент ? !',
 ];
 const AUTHOR_NAMES = [
   'Артем',
@@ -73,38 +81,43 @@ const DESCRIPTIONS = [
   'кокосовая пальма',
   'яхта',
   'английский завтрак',
-  'праздничный торт'
+  'праздничный торт',
 ];
-/*функции для создания массива из 25 сгенерированных объектов.
-Каждый объект массива — описание фотографии, опубликованной пользователем.
-Напишем функцию генерирующую объект- описание фото
-*/
-const setSize = 25;
+
+const LIKES_RANGE_MIN = 15;
+const LIKES_RANGE_MAX = 200;
+
 const createFotoCard = () => {
-  const randomLikesIndex = getRandomPositiveInteger(15, 200);
-  const randonDescriptionIndex = getRandomPositiveInteger(0, DESCRIPTIONS.length - 1);
-  const IdIndex = getRandomPositiveInteger(1, 25);
+  const commentsNumber = getRandomPositiveInteger(1, 1000);
 
   const createComment = () => {
-    const randomMessagesIndex = getRandomPositiveInteger(0, MESSAGES.length - 1);
-    const randomAuthorIndex = getRandomPositiveInteger(0, AUTHOR_NAMES.length - 1);
+    const AVATARS_NUMBER = 6;
+    const randomMessageLength = getRandomPositiveInteger(1, 2);
+    //функция для создания сообщения в комментарии
+    const getmessageFrase = () => {
+      const messageFrase = [];
+      for (let i = 0; i < randomMessageLength; i++) {
+        messageFrase.push(MESSAGES[getRandomPositiveInteger(0, MESSAGES.length - 1)]);
+      }
+      return messageFrase.join(' ');
+    };
+
     return {
-      id: getRandomPositiveInteger(1, 1000),
-      avatar: 'img/avatar-' + getRandomPositiveInteger(1, 6) + '.svg',
-      message: MESSAGES[randomMessagesIndex],
-      name: AUTHOR_NAMES[randomAuthorIndex],
+      id: getRandomPositiveInteger(1, commentsNumber),
+      avatar: `img/avatar-${getRandomPositiveInteger(1, AVATARS_NUMBER)}.svg`,
+      message: getmessageFrase(),
+      name: AUTHOR_NAMES[getRandomPositiveInteger(0, AUTHOR_NAMES.length - 1)],
     };
   };
 
   return {
-    id: IdIndex, //1-25 не повторяются
-    url: 'photos/' + IdIndex + '.jpg', //где {{i}} — это число от 1 до 25
-    description: DESCRIPTIONS[randonDescriptionIndex],
-    likes: randomLikesIndex, //Случайное число от 15 до 200.
-    comments: Array.from({ length: 5 }, createComment)
+    id: FOTOS_INDEXES.shift(), //1-25 не повторяются
+    url: `photos/${URL_INDEXES.pop()}.jpg`, //где {{i}} — это число от 1 до 25
+    description: DESCRIPTIONS[getRandomPositiveInteger(0, DESCRIPTIONS.length - 1)],
+    likes: getRandomPositiveInteger(LIKES_RANGE_MIN, LIKES_RANGE_MAX), //Случайное число от 15 до 200.
+    comments: Array.from({ length: commentsNumber }, createComment),
   };
 };
 
-const getSetFotos = Array.from({ length: setSize }, createFotoCard);
+const getFotos = Array.from({ length: FOTOS_NUMBER }, createFotoCard);
 
-console.log(getSetFotos);
