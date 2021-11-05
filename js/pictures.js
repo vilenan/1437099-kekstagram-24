@@ -1,24 +1,8 @@
-//модуль, который будет отвечать за отрисовку миниатюр
-//На основе временных данных для разработки и шаблона #picture создайте DOM-элементы, соответствующие фотографиям,
-//и заполните их данными:
-// Адрес изображения url подставьте как атрибут src изображения.
-// Количество лайков likes выведите в блок .picture__likes.
-// Количество комментариев comments выведите в блок .picture__comments.
-// Отрисуйте сгенерированные DOM-элементы в блок .pictures. Для вставки элементов используйте DocumentFragment.
-//<!-- Шаблон изображения случайного пользователя -->
 import { getFotos } from './data.js';
-{/* <template id="picture">
-      <a href="#" class="picture">
-        <img class="picture__img" src="" width="182" height="182" alt="Случайная фотография">
-        <p class ="picture__info">
-        <span class ="picture__comments"></span>
-        <span class ="picture__likes"></span>
-        </p>
-      </a>
-    </template> */}
 const fragment = document.createDocumentFragment();
 const templateFragment = document.querySelector('#picture').content; // Находим фрагмент с содержимым темплейта, ссылка
 const similarFotos = getFotos;
+// console.log(similarFotos);
 
 similarFotos.forEach((foto) => {
   const fotoElement = templateFragment.cloneNode(true);
@@ -28,7 +12,54 @@ similarFotos.forEach((foto) => {
   fragment.appendChild(fotoElement);
 });
 
-const userPictures = document.querySelector('.pictures'); //куда будем вставлять
+const userPictures = document.querySelector('.pictures');
 userPictures.appendChild(fragment);
 
+//Полноэкранный показ изображения
+const bigPicture = document.querySelector('.big-picture');
+const userPicturesList = userPictures.querySelectorAll('.picture');
+const bodyElement = document.body;
+userPicturesList.forEach((item) => item.addEventListener('click', (evt) => {
+  bigPicture.classList.remove('hidden');
+  bodyElement.classList.add('modal-open');
+}));
+
+const bigPictureImage = bigPicture.querySelector('.big-picture__img');
+bigPictureImage.children.src = 'img/logo-background-3.jpg';
+const bigPictureLikes = bigPicture.querySelector('.likes-count');
+bigPictureLikes.textContent = 1;
+const bigPictureCommentsNumber = bigPicture.querySelector('.comments-count');
+bigPictureCommentsNumber.textContent = '5';
+const bigPictureCommentsList = bigPicture.querySelector('.social__comments');
+
+// <li class="social__comment">
+//     <img
+//         class="social__picture"
+//         src="{{аватар}}"
+//         alt="{{имя комментатора}}"
+//         width="35" height="35">
+//     <p class="social__text">{{текст комментария}}</p>
+// </li>
+const bigPictureDiscription = bigPicture.querySelector('.social__caption');
+bigPictureDiscription.textContent = 'описание';
+
+const bigPictureCommentCount = bigPicture.querySelector('.social__comment-count');
+bigPictureCommentCount.classList.add('hidden');
+const bigPictureLoader = bigPicture.querySelector('.comments-loader');
+bigPictureLoader.classList.add('hidden');
+
+
+const bigPictureClose = bigPicture.querySelector('.big-picture__cancel');
+bigPictureClose.addEventListener('click', (evt) => {
+  evt.preventDefault();
+  bigPicture.classList.add('hidden');
+  bodyElement.classList.remove('modal-open');
+});
+window.addEventListener('keydown', (evt) => {
+  if (evt.keyCode === 27) {
+    evt.preventDefault();
+    bigPicture.classList.add('hidden');
+    bodyElement.classList.remove('modal-open');
+  }
+});
 
